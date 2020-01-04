@@ -36,7 +36,7 @@ io.on('connection' , (socket) => {
         socket.join(user.room)
 
         socket.emit('message',generateMessage('Welcome!' ,undefined))
-        socket.broadcast.to(user.room).emit('message',generateMessage(user.username + ' has entered the chatroom!', undefined))
+        io.to(user.room).emit('message',generateMessage(user.username + ' entered the chatroom!', undefined))
         io.to(user.room).emit('renderUsersList', {
             room: user.room,
             users: getRoomUsers(user.room)
@@ -57,7 +57,7 @@ io.on('connection' , (socket) => {
 
         const user = getUser(id)
 
-        socket.broadcast.to(user.room).emit('message' , generateMessage('New message: ' + message, user.username))
+        io.to(user.room).emit('message' , generateMessage('New message: ' + message, user.username))
         callback()
     })
 
@@ -66,7 +66,7 @@ io.on('connection' , (socket) => {
         const locationMessage = 'Current Location: https://www.google.com/maps?q=' + position.latitude + ',' + position.longitude
         const currentLocation = 'https://www.google.com/maps?q=' + position.latitude + ',' + position.longitude
         const user = getUser(socket.id)
-        socket.broadcast.to(user.room).emit('shareLocationMessage' , generateMessage(currentLocation, user.username))
+        io.to(user.room).emit('shareLocationMessage' , generateMessage(currentLocation, user.username))
         callback('Location shared successfully!')
     })
 
